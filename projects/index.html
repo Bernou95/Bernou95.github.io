@@ -1,0 +1,861 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Robotics software engineer. Sim-to-real, real-time torque control, ROS 2, neuro-inspired control.">
+      
+      
+        <meta name="author" content="Jose Bernardo Martinez Morales">
+      
+      
+        <link rel="canonical" href="https://bernou95.github.io/projects/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="cerebellar-snn/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Projects - Bernardo Martinez</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#projects" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Bernardo Martinez" class="md-header__button md-logo" aria-label="Bernardo Martinez" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.41 4 16 6.41v.18L18.41 9H22v2h-4.41L16 9.41V12h-1a2 2 0 0 1-2-2V7.5H9.86c-.09.37-.24.72-.44 1.05L15.18 19H20a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2h6.61l-4.69-8.5a4.006 4.006 0 0 1-3.81-3A4 4 0 0 1 5 2.63c2.13-.55 4.31.73 4.86 2.87H13V3a2 2 0 0 1 2-2h1v2.59L17.59 2H22v2zM6 4.5a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bernardo Martinez
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Projects
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projects
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Bernardo Martinez" class="md-nav__button md-logo" aria-label="Bernardo Martinez" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.41 4 16 6.41v.18L18.41 9H22v2h-4.41L16 9.41V12h-1a2 2 0 0 1-2-2V7.5H9.86c-.09.37-.24.72-.44 1.05L15.18 19H20a2 2 0 0 1 2 2v1H2v-1a2 2 0 0 1 2-2h6.61l-4.69-8.5a4.006 4.006 0 0 1-3.81-3A4 4 0 0 1 5 2.63c2.13-.55 4.31.73 4.86 2.87H13V3a2 2 0 0 1 2-2h1v2.59L17.59 2H22v2zM6 4.5a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg>
+
+    </a>
+    Bernardo Martinez
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projects
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projects
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cerebellar-snn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cerebellar SNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dual-actuation-arm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dual-actuation arm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tiago-pro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIAGo Pro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tumor-localization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tumor localization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formation-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Formation control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cerebellar-snn-motor-learning-from-simulation-to-real-robots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cerebellar SNN: motor learning from simulation to real robots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dual-actuation-arm-remote-high-level-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual-actuation arm: remote high-level interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tiago-pro-a-ros-2-torque-interface-for-both-arms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TIAGo Pro: a ROS 2 torque interface for both arms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tumor-localization-by-bioimpedance-palpation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tumor localization by bioimpedance palpation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formation-control-with-obstacle-avoidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formation control with obstacle avoidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="projects">Projects</h1>
+<p>From algorithms to real robots. Click a title for the full story of each project.</p>
+<div class="project">
+<p class="kicker">Project 1 · Neurorobotics</p>
+<h2 id="cerebellar-snn-motor-learning-from-simulation-to-real-robots"><a href="cerebellar-snn/">Cerebellar SNN: motor learning from simulation to real robots</a></h2>
+<p class="headline">A cerebellum model of 70,000+ neurons that learns torque control and moves to real robots by switching one ROS topic.</p>
+<div class="media wide-narrow">
+<figure>
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/franka_circle.jpg" src="../assets/video/franka_circle.mp4"></video>
+<figcaption>Franka Research 3 driven by the SNN on a Jetson Xavier, circular trajectory</figcaption>
+</figure>
+<figure class="tall">
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/baxter.jpg" src="../assets/video/baxter.mp4"></video>
+<figcaption>Baxter, the hardest case (elastic joints)</figcaption>
+</figure>
+</div>
+<div class="media two">
+<figure>
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/sim2real_1.jpg" src="../assets/video/sim2real_1.mp4"></video>
+<figcaption>1 · Learning starts in simulation: erratic, potentially damaging motions</figcaption>
+</figure>
+<figure>
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/sim2real_2.jpg" src="../assets/video/sim2real_2.mp4"></video>
+<figcaption>2 · Once stable, weights are saved (~450 trials, ~30 min)</figcaption>
+</figure>
+<figure>
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/sim2real_3.jpg" src="../assets/video/sim2real_3.mp4"></video>
+<figcaption>3 · Weights loaded on the real robot by changing only the ROS topic</figcaption>
+</figure>
+<figure>
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/sim2real_4.jpg" src="../assets/video/sim2real_4.mp4"></video>
+<figcaption>4 · After ~80 more trials, the error converges</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Challenge:</strong> learn arm control in torque, in real time and safely, on robots with different dynamics.</li>
+<li><strong>My work:</strong> Gazebo–EDLUT bridge (Neurorobotics Platform), SNN on GPU including Jetson Xavier/Orin, torque-safety layer, real-robot tests on Franka Research 3, Baxter and Sawyer with Vicon ground truth.</li>
+<li><strong>Result:</strong> ~450 trials (~30 min) in simulation, then ~80 trials on the real robot until the error converged.</li>
+<li><strong>Control rate:</strong> PC 500 Hz · Jetson Orin 250 Hz · Jetson Xavier 100 Hz.</li>
+</ul>
+<p class="links"><a href="cerebellar-snn/">Read the full story →</a></p>
+<div class="chips"><span>ROS</span><span>EDLUT</span><span>Gazebo</span><span>Neurorobotics Platform</span><span>GPU</span><span>Jetson</span><span>Vicon</span></div>
+</div>
+<div class="project">
+<p class="kicker">Project 2 · Robot software</p>
+<h2 id="dual-actuation-arm-remote-high-level-interface"><a href="dual-actuation-arm/">Dual-actuation arm: remote high-level interface</a></h2>
+<p class="headline">Lets neural controllers drive a research arm with muscle-like actuators from another computer.</p>
+<div class="media two">
+<figure><img src="../assets/img/arm_alpha.jpg" alt="Alpha version of the dual-actuation arm"><figcaption>Alpha version</figcaption></figure>
+<figure><img src="../assets/img/arm_cad.jpg" alt="CAD of the new dual-actuation arm"><figcaption>New version (CAD)</figcaption></figure>
+</div>
+<div class="media two">
+<figure class="tall">
+<video controls="controls" muted="muted" playsinline="playsinline" poster="../assets/video/arm_nostiff.jpg" preload="none" src="../assets/video/arm_nostiff.mp4"></video>
+<figcaption>① Without stiffness</figcaption>
+</figure>
+<figure class="tall">
+<video controls="controls" muted="muted" playsinline="playsinline" poster="../assets/video/arm_stiff.jpg" preload="none" src="../assets/video/arm_stiff.mp4"></video>
+<figcaption>② With stiffness</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Challenge:</strong> each joint has agonist and antagonist actuators (adjustable stiffness), and its Raspberry Pi 4 controller has no GPU for neural controllers.</li>
+<li><strong>My work:</strong> high-level interface in ROS 2 and a Rust + Zenoh link for remote commands, targeting 1 kHz torque control and exchanging kinematics and commands.</li>
+<li><strong>Result:</strong> neural controllers run off-board; the clips compare the arm without and with stiffness.</li>
+<li><strong>Context:</strong> EPFL BioRob visit (2025), with <a href="https://km-robota.com/">KM-RoBoTa</a> on the hardware deployment.</li>
+</ul>
+<p class="links"><a href="dual-actuation-arm/">Read the full story →</a></p>
+<div class="chips"><span>Rust</span><span>Zenoh</span><span>ROS 2</span><span>Raspberry Pi</span></div>
+</div>
+<div class="project">
+<p class="kicker">Project 3 · Mobile manipulation</p>
+<h2 id="tiago-pro-a-ros-2-torque-interface-for-both-arms"><a href="tiago-pro/">TIAGo Pro: a ROS 2 torque interface for both arms</a></h2>
+<p class="headline">I built the missing torque interface for the arms: a ROS 2 interface to the arm controllers with a state machine that allows one controller per arm. Running on the real robot at 500 Hz.</p>
+<div class="media narrow-wide">
+<figure class="tall">
+<video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" poster="../assets/video/tiago.jpg" src="../assets/video/tiago.mp4"></video>
+<figcaption>Torque control on the real TIAGo Pro</figcaption>
+</figure>
+<figure><img src="../assets/img/tiago_bugfix.jpg" alt="Diagram: problem, root cause and fix of the controller switch"><figcaption>Making mode switches safe: problem, root cause and fix</figcaption></figure>
+</div>
+<ul>
+<li><strong>Challenge:</strong> give users torque control of both arms through ROS 2 topics, safely.</li>
+<li><strong>My work:</strong> the ROS 2 interface to the arm controllers, plus a state machine that allows only one controller (position, velocity or torque) per arm at a time. MoveIt 2 for planning, Docker for the environment.</li>
+<li><strong>Safe switching:</strong> found a bug in the Gazebo simulation plugin by disassembling its binary. Fix: one atomic <code>switch_controller</code> call, position hold at startup, 0.5 s watchdog fallback.</li>
+<li><strong>Software:</strong> ROS 1 → ROS 2 / MoveIt 2 migration, parametric <code>arm_{side}</code> topics, 4 scripts merged into 1 dispatcher, full-body controllers.</li>
+</ul>
+<p class="links"><a href="tiago-pro/">Read the full story →</a></p>
+<div class="chips"><span>ROS 2</span><span>ros2_control</span><span>MoveIt 2</span><span>Gazebo</span><span>Docker</span><span>C++</span><span>Python</span></div>
+</div>
+<div class="project">
+<p class="kicker">Project 4 · Medical robotics</p>
+<h2 id="tumor-localization-by-bioimpedance-palpation"><a href="tumor-localization/">Tumor localization by bioimpedance palpation</a></h2>
+<p class="headline">Tumor shape recovered by touch with only 25–50% of the samples (recall above 90%).</p>
+<div class="media narrow-wide">
+<figure><img src="../assets/img/tumor_setup.jpg" alt="dVRK PSM2 palpating a sponge phantom"><figcaption>dVRK PSM2 and sponge phantom with fiducial markers</figcaption></figure>
+<figure><img src="../assets/img/tumor_gp.jpg" alt="Ground truth vs Gaussian Process active search in RViz and MATLAB"><figcaption>Ground truth vs active area search (RViz + MATLAB)</figcaption></figure>
+</div>
+<div class="media two">
+<figure><img src="../assets/img/tumor_truth.jpg" alt="Ground truth impedance map"><figcaption>Ground truth: exhaustive impedance map</figcaption></figure>
+<figure><img src="../assets/img/tumor_estimate.jpg" alt="Gaussian Process estimate"><figcaption>Estimate from a fraction of the samples</figcaption></figure>
+</div>
+<ul>
+<li><strong>Challenge:</strong> locate and outline a tumor beneath the tissue surface, where vision cannot see, for minimally invasive surgery.</li>
+<li><strong>My work:</strong> dVRK PSM2 palpation with an electrical bioimpedance probe; ROS/RViz simulation and EBI sensor emulator (20×20 grid); Gaussian Process active area search in MATLAB; RealSense point cloud and fiducials for 3D validation.</li>
+<li><strong>Result:</strong> the estimate matches the exhaustive ground truth. Tested on a sponge phantom (soap and water for impedance contrast).</li>
+</ul>
+<p class="links"><a href="tumor-localization/">Read the full story →</a></p>
+<div class="chips"><span>dVRK</span><span>ROS</span><span>RViz</span><span>MATLAB</span><span>Gaussian Process</span><span>RealSense</span></div>
+</div>
+<div class="project">
+<p class="kicker">Project 5 · Multi-robot systems · Published</p>
+<h2 id="formation-control-with-obstacle-avoidance"><a href="formation-control/">Formation control with obstacle avoidance</a></h2>
+<p class="headline">Robots keep a formation and avoid obstacles, with continuous velocities at all times.</p>
+<div class="media">
+<figure><img src="../assets/img/formation_idea.jpg" alt="Diagram of the hierarchical task control"><figcaption>Core idea: obstacle avoidance (high priority) over formation tracking (low priority), with a smooth transition</figcaption></figure>
+</div>
+<ul>
+<li><strong>Core idea:</strong> two prioritized tasks. Obstacle avoidance (high priority, active only near obstacles) over formation tracking (low priority, consensus). A smooth transition keeps velocities continuous.</li>
+<li><strong>Distributed:</strong> neighbor data and local obstacle sensing only. No global frame, no map. Stability proven.</li>
+<li><strong>Real robots:</strong> Pioneer 3DX leader + 2 TurtleBot 2, triangular formation, ROS over WiFi, OptiTrack.</li>
+<li><strong>Linear trajectory (30 s):</strong> a follower evades a fixed obstacle at ~18 s; the group recovers the formation.</li>
+<li><strong>Circular trajectory (R 1.1 m, 70 s):</strong> evasion at ~53–65 s; tracking errors converge to zero.</li>
+<li><strong>My role:</strong> first author; software, methodology, validation. Later migrated the full stack to ROS 2 and Gazebo Sim (Harmonic).</li>
+</ul>
+<p class="links">
+<a href="https://drive.google.com/file/d/1RVNe52Gh6gmc2AtGyeuERfKY54dixHz-/view">▶ Video: linear trajectory</a>
+<a href="https://drive.google.com/file/d/1bJZBO7dByTipDryC0XqHJurHE4f-d_i1/view?usp=sharing">▶ Video: circular trajectory</a>
+<a href="https://www.mdpi.com/1424-8220/21/13/4374">📄 Paper (Sensors 2021)</a>
+</p>
+<p class="links"><a href="formation-control/">Read the full story →</a></p>
+<div class="chips"><span>ROS</span><span>ROS 2</span><span>Consensus control</span><span>OptiTrack</span><span>TurtleBot 2</span><span>Gazebo Harmonic</span></div>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Jose Bernardo Martinez Morales
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Bernou95" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:jbernardo.mtzm@outlook.com" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.indexes", "navigation.top", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
