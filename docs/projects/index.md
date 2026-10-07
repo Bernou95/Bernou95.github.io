@@ -60,19 +60,19 @@ Five projects, one path: from algorithm to real robot. Click a title for the ful
 <div class="project" markdown>
 <p class="kicker">Project 3 · Mobile manipulation</p>
 
-## [TIAGo Pro: safe dual-arm torque control in ROS 2](tiago-pro.md)
+## [TIAGo Pro: a ROS 2 torque interface for both arms](tiago-pro.md)
 
-<p class="headline">Safe position-to-torque switching for both arms, running on the real robot at 500 Hz.</p>
+<p class="headline">The robot exposed no torque interface to users, so I built one: a ROS 2 interface to the arm controllers with a state machine that allows one controller per arm. Running on the real robot at 500 Hz.</p>
 
 <div class="media narrow-wide">
 <figure class="tall"><video src="../assets/video/tiago.mp4" poster="../assets/video/tiago.jpg" autoplay loop muted playsinline></video><figcaption>Torque control on the real TIAGo Pro</figcaption></figure>
-<figure><img src="../assets/img/tiago_bugfix.jpg" alt="Diagram: problem, root cause and fix of the controller switch"><figcaption>Deep dive: why a controller switch froze the robot, and the fix</figcaption></figure>
+<figure><img src="../assets/img/tiago_bugfix.jpg" alt="Diagram: problem, root cause and fix of the controller switch"><figcaption>Making mode switches safe: problem, root cause and fix</figcaption></figure>
 </div>
 
-- **Problem:** switching controllers froze the (simulated) hardware.
-- **Root cause:** found by disassembling the PAL hardware plugin. Stopping the position controller cleared the whole control-mode register.
-- **Fix:** one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
-- **Software:** ROS 1 → ROS 2 / MoveIt 2 migration, parametric `arm_{side}` topics, 4 scripts merged into 1 dispatcher, full-body controllers, Docker.
+- **Challenge:** no torque interface was exposed to the user through ROS 2 topics.
+- **My work:** the ROS 2 interface to the arm controllers, plus a state machine that allows only one controller (position, velocity or torque) per arm at a time. MoveIt 2 for planning, Docker for the environment.
+- **Safe switching:** found a hardware-plugin bug by disassembling its binary. Fix: one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
+- **Software:** ROS 1 → ROS 2 / MoveIt 2 migration, parametric `arm_{side}` topics, 4 scripts merged into 1 dispatcher, full-body controllers.
 
 <p class="links"><a href="tiago-pro/">Read the full story →</a></p>
 
