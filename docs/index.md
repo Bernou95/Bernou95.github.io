@@ -10,8 +10,9 @@ hide:
 <h1>Jose Bernardo Martinez Morales</h1>
 <p class="role">Robotics Software Engineer · Granada, Spain</p>
 
-I take robot controllers from simulation to real hardware: real-time torque control on robot arms, ROS 2 interfaces, and deployment on embedded GPUs.
-I am a PhD candidate at the University of Granada, where I combine neuro-inspired control (spiking cerebellar models) with robotics software engineering using C++ and Python.
+Robotics software engineer with a strong focus on ROS 2, real-time control, and system integration for robotic platforms. I have experience building and maintaining robust robotic software stacks, from simulation and testing to deployment on real hardware.
+
+My work spans C++ and Python development, ROS/ROS 2 middleware, and control for manipulators and mobile robots. I’m particularly interested in reliable autonomy, sim-to-real transfer, and scalable robotic architectures. Currently exploring reinforcement learning and its applications in robotics
 
 [:material-email: Email](mailto:jbernardo.mtzm@outlook.com){ .md-button .md-button--primary }
 [:fontawesome-brands-github: GitHub](https://github.com/Bernou95){ .md-button }
@@ -77,7 +78,7 @@ I am a PhD candidate at the University of Granada, where I combine neuro-inspire
 <span class="when">2017 – 2019</span>
 </div>
 <div class="row" markdown>
-<span class="what">BEng, Mechatronics Engineering · UASLP</span>
+<span class="what">BEng, Mechatronics Engineering · UASLP (Mexico)</span>
 <span class="when">2012 – 2017</span>
 </div>
 

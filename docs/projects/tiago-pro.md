@@ -131,6 +131,6 @@ Circle, infinity, square and target-reaching scripts were unified into **`dual_a
 
 ## Development environment
 
-The whole environment ran in **Docker**, which required working around a missing Gazebo Classic plugin binary for that architecture. Docker also keeps the robot's own dependencies untouched, which matters because the same dependencies serve all of the robot's controllers.
+The whole environment ran in **Docker**. Docker also keeps the robot's own dependencies untouched, which matters because the same dependencies serve all of the robot's controllers.
 
 <div class="nextlink"><a href="../dual-actuation-arm/">← Previous: Dual-actuation arm</a><a href="../tumor-localization/">Next: Tumor localization →</a></div>
