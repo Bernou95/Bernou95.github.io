@@ -15,7 +15,7 @@ I am a PhD candidate at the University of Granada, where I combine neuro-inspire
 
 [:material-email: Email](mailto:jbernardo.mtzm@outlook.com){ .md-button .md-button--primary }
 [:fontawesome-brands-github: GitHub](https://github.com/Bernou95){ .md-button }
-[:material-robot-industrial: Projects](projects.md){ .md-button }
+[:material-robot-industrial: Projects](projects/index.md){ .md-button }
 </div>
 </div>
 

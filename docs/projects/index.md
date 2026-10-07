@@ -1,17 +1,15 @@
 ---
 title: Projects
-hide:
-  - navigation
 ---
 
 # Projects
 
-Five projects, one path: from algorithm to real robot.
+Five projects, one path: from algorithm to real robot. Click a title for the full story of each project.
 
 <div class="project" markdown>
 <p class="kicker">Project 1 · Neurorobotics</p>
 
-## Cerebellar SNN: motor learning from simulation to real robots
+## [Cerebellar SNN: motor learning from simulation to real robots](cerebellar-snn.md)
 
 <p class="headline">A 70,000-neuron cerebellum model that learns torque control and moves to real robots by switching one ROS topic.</p>
 
@@ -31,13 +29,15 @@ Five projects, one path: from algorithm to real robot.
 - **Result:** ~450 trials (~30 min) in simulation, then ~80 trials on the real robot until the error converged.
 - **Control rate:** PC 500 Hz · Jetson Orin 250 Hz · Jetson Xavier 100 Hz.
 
+<p class="links"><a href="cerebellar-snn/">Read the full story →</a></p>
+
 <div class="chips"><span>ROS</span><span>EDLUT</span><span>Gazebo</span><span>Neurorobotics Platform</span><span>GPU</span><span>Jetson</span><span>Vicon</span></div>
 </div>
 
 <div class="project" markdown>
 <p class="kicker">Project 2 · Robot software</p>
 
-## Dual-actuation arm: remote high-level interface
+## [Dual-actuation arm: remote high-level interface](dual-actuation-arm.md)
 
 <p class="headline">Lets neural controllers drive a research arm with muscle-like actuators from another computer.</p>
 
@@ -52,13 +52,15 @@ Five projects, one path: from algorithm to real robot.
 - **Result:** neural controllers run off-board; the clip shows the same trajectory without, then with stiffness.
 - **Context:** EPFL BioRob visit (2025), with KM-RoBoTa on the hardware deployment.
 
+<p class="links"><a href="dual-actuation-arm/">Read the full story →</a></p>
+
 <div class="chips"><span>Rust</span><span>Zenoh</span><span>ROS 2</span><span>Raspberry Pi</span></div>
 </div>
 
 <div class="project" markdown>
 <p class="kicker">Project 3 · Mobile manipulation</p>
 
-## TIAGo Pro: safe dual-arm torque control in ROS 2
+## [TIAGo Pro: safe dual-arm torque control in ROS 2](tiago-pro.md)
 
 <p class="headline">Safe position-to-torque switching for both arms, running on the real robot at 500 Hz.</p>
 
@@ -72,13 +74,15 @@ Five projects, one path: from algorithm to real robot.
 - **Fix:** one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
 - **Software:** ROS 1 → ROS 2 / MoveIt 2 migration, parametric `arm_{side}` topics, 4 scripts merged into 1 dispatcher, full-body controllers, Docker.
 
+<p class="links"><a href="tiago-pro/">Read the full story →</a></p>
+
 <div class="chips"><span>ROS 2</span><span>ros2_control</span><span>MoveIt 2</span><span>Gazebo</span><span>Docker</span><span>C++</span><span>Python</span></div>
 </div>
 
 <div class="project" markdown>
 <p class="kicker">Project 4 · Medical robotics</p>
 
-## Tumor localization by bioimpedance palpation
+## [Tumor localization by bioimpedance palpation](tumor-localization.md)
 
 <p class="headline">Tumor shape recovered by touch with only 25–50% of the samples (recall above 90%).</p>
 
@@ -95,13 +99,15 @@ Five projects, one path: from algorithm to real robot.
 - **My work:** dVRK PSM2 palpation with an electrical bioimpedance probe; ROS/RViz simulation and EBI sensor emulator (20×20 grid); Gaussian Process active area search in MATLAB; RealSense point cloud and fiducials for 3D validation.
 - **Result:** the estimate matches the exhaustive ground truth. Tested on a sponge phantom (soap and water for impedance contrast).
 
+<p class="links"><a href="tumor-localization/">Read the full story →</a></p>
+
 <div class="chips"><span>dVRK</span><span>ROS</span><span>RViz</span><span>MATLAB</span><span>Gaussian Process</span><span>RealSense</span></div>
 </div>
 
 <div class="project" markdown>
 <p class="kicker">Project 5 · Multi-robot systems · Published</p>
 
-## Formation control with obstacle avoidance
+## [Formation control with obstacle avoidance](formation-control.md)
 
 <p class="headline">Robots keep a formation and avoid obstacles, with continuous velocities at all times.</p>
 
@@ -121,6 +127,8 @@ Five projects, one path: from algorithm to real robot.
 <a href="https://drive.google.com/file/d/1bJZBO7dByTipDryC0XqHJurHE4f-d_i1/view?usp=sharing">▶ Video: circular trajectory</a>
 <a href="https://www.mdpi.com/1424-8220/21/13/4374">📄 Paper (Sensors 2021)</a>
 </p>
+
+<p class="links"><a href="formation-control/">Read the full story →</a></p>
 
 <div class="chips"><span>ROS</span><span>ROS 2</span><span>Consensus control</span><span>OptiTrack</span><span>TurtleBot 2</span><span>Gazebo Harmonic</span></div>
 </div>

@@ -5,12 +5,19 @@ site_author: Jose Bernardo Martinez Morales
 
 nav:
   - About: index.md
-  - Projects: projects.md
+  - Projects:
+    - projects/index.md
+    - Cerebellar SNN: projects/cerebellar-snn.md
+    - Dual-actuation arm: projects/dual-actuation-arm.md
+    - TIAGo Pro: projects/tiago-pro.md
+    - Tumor localization: projects/tumor-localization.md
+    - Formation control: projects/formation-control.md
 
 theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.indexes
     - navigation.top
     - toc.follow
   palette:
@@ -36,6 +43,7 @@ extra_css:
 
 markdown_extensions:
   - attr_list
+  - admonition
   - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
