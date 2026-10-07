@@ -1,0 +1,158 @@
+/* Palette: navy + teal, same as the portfolio deck */
+:root {
+  --md-primary-fg-color: #0b2239;
+  --md-primary-fg-color--light: #1d3b5c;
+  --md-primary-fg-color--dark: #06182a;
+  --md-accent-fg-color: #0e9f8e;
+  --card-bg: #ffffff;
+  --card-line: #d5dee7;
+  --chip-bg: #e6f5f2;
+  --chip-fg: #0a7a6d;
+  --muted: #5b6b7b;
+}
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #0b2239;
+  --md-accent-fg-color: #2cc4b0;
+  --md-typeset-a-color: #5fd3c3;
+  --card-bg: #1c2433;
+  --card-line: #2d3a4d;
+  --chip-bg: #133a37;
+  --chip-fg: #7fe0d2;
+  --muted: #9aa8b8;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 0.5rem 0 1.5rem;
+}
+.hero img.profile {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  object-fit: cover;
+  min-width: 170px;
+  max-width: none;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 170px;
+  box-shadow: 0 4px 18px rgba(11, 34, 57, 0.18);
+}
+.hero h1 {
+  margin: 0 0 0.2rem;
+  font-weight: 700;
+  color: var(--md-typeset-color);
+}
+.hero .role {
+  color: var(--md-accent-fg-color);
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+.hero p { margin: 0.4rem 0; }
+.hero .md-button { margin: 0.5rem 0.4rem 0 0; }
+@media (max-width: 640px) {
+  .hero { flex-direction: column; text-align: center; }
+  .hero img.profile { width: 140px; height: 140px; min-width: 140px; flex-basis: auto; }
+}
+
+/* ---------- chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 0; padding: 0; }
+.chips span {
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+/* ---------- timeline-style rows (experience / education) ---------- */
+.row {
+  border-bottom: 1px solid var(--card-line);
+  padding: 0.7rem 0;
+}
+.row > p:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 1rem;
+  margin: 0;
+}
+.row .what { flex: 1 1 auto; }
+.row .what { font-weight: 700; }
+.row .when { color: var(--muted); font-size: 0.72rem; white-space: nowrap; }
+.row .where { color: var(--muted); font-size: 0.72rem; flex-basis: 100%; }
+.row ul { margin: 0.3rem 0 0 1rem !important; }
+.row ul li { margin-bottom: 0.15rem !important; }
+
+/* ---------- project cards ---------- */
+.project {
+  background: var(--card-bg);
+  border: 1px solid var(--card-line);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem 1.2rem;
+  margin: 1.4rem 0 2rem;
+  box-shadow: 0 2px 10px rgba(11, 34, 57, 0.06);
+}
+.project .kicker {
+  color: var(--md-accent-fg-color);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.project h2 { margin: 0.2rem 0 0.3rem !important; }
+.project .headline { font-weight: 600; margin: 0 0 0.8rem; }
+.project ul { margin-top: 0.6rem !important; }
+
+.media {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.4rem 0 0.6rem;
+}
+.media.two { grid-template-columns: 1fr 1fr; }
+.media.three { grid-template-columns: 1fr 1fr 1fr; }
+.media.wide-narrow { grid-template-columns: 2fr 1fr; }
+.media.narrow-wide { grid-template-columns: 1fr 2fr; }
+@media (max-width: 640px) {
+  .media.two, .media.three, .media.wide-narrow, .media.narrow-wide { grid-template-columns: 1fr; }
+}
+.media figure { margin: 0; display: flex; flex-direction: column; }
+.media img, .media video {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--card-line);
+  background: #000;
+  display: block;
+}
+.media img { background: transparent; }
+.media .tall img, .media .tall video { max-height: 420px; object-fit: contain; }
+.media figcaption {
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-align: center;
+  margin-top: 0.3rem;
+}
+
+.links a { margin-right: 1rem; font-weight: 600; }
+
+/* buttons readable in dark mode (primary navy is too dark there) */
+[data-md-color-scheme="slate"] .md-typeset .md-button {
+  color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+}
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  background-color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  color: #0b2239;
+}
+.md-typeset .md-button .twemoji { margin-right: 0.3rem; }
+
+/* keep the hero text column shrinkable on narrow screens */
+.hero > div { min-width: 0; }
+@media (max-width: 640px) {
+  .hero h1 { font-size: 1.5rem; }
+  .hero .md-button { margin: 0.4rem 0.2rem 0; }
+}

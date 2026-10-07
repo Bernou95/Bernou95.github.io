@@ -1,0 +1,54 @@
+site_name: Bernardo Martinez
+site_url: https://bernou95.github.io/
+site_description: Robotics software engineer. Sim-to-real, real-time torque control, ROS 2, neuro-inspired control.
+site_author: Jose Bernardo Martinez Morales
+
+nav:
+  - About: index.md
+  - Projects: projects.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.top
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    logo: material/robot-industrial
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: false
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Bernou95
+    - icon: fontawesome/solid/envelope
+      link: mailto:jbernardo.mtzm@outlook.com
+  generator: false
+
+copyright: © Jose Bernardo Martinez Morales
