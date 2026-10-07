@@ -46,8 +46,8 @@ From algorithms to real robots. Click a title for the full story of each project
 <figure><img src="../assets/img/arm_cad.jpg" alt="CAD of the new dual-actuation arm"><figcaption>New version (CAD)</figcaption></figure>
 </div>
 <div class="media two">
-<figure class="tall"><video src="../assets/video/arm_nostiff.mp4" poster="../assets/video/arm_nostiff.jpg" controls preload="none" playsinline></video><figcaption>① Without stiffness</figcaption></figure>
-<figure class="tall"><video src="../assets/video/arm_stiff.mp4" poster="../assets/video/arm_stiff.jpg" controls preload="none" playsinline></video><figcaption>② With stiffness</figcaption></figure>
+<figure class="tall"><video src="../assets/video/arm_nostiff.mp4" poster="../assets/video/arm_nostiff.jpg" controls preload="none" muted playsinline></video><figcaption>① Without stiffness</figcaption></figure>
+<figure class="tall"><video src="../assets/video/arm_stiff.mp4" poster="../assets/video/arm_stiff.jpg" controls preload="none" muted playsinline></video><figcaption>② With stiffness</figcaption></figure>
 </div>
 
 - **Challenge:** each joint has agonist and antagonist actuators (adjustable stiffness), and its Raspberry Pi 4 controller has no GPU for neural controllers.

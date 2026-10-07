@@ -56,8 +56,8 @@ I built the interface with **ROS 2**, keeping the target applications in mind:
 The two clips show the same arm **without stiffness** and **with stiffness**. Press play on either one to compare. It is a direct demonstration of the dynamics that the agonist/antagonist design makes possible, and of controlling the arm through the remote interface.
 
 <div class="media two">
-<figure class="tall"><video src="../../assets/video/arm_nostiff.mp4" poster="../../assets/video/arm_nostiff.jpg" controls preload="none" playsinline></video><figcaption>① Without stiffness</figcaption></figure>
-<figure class="tall"><video src="../../assets/video/arm_stiff.mp4" poster="../../assets/video/arm_stiff.jpg" controls preload="none" playsinline></video><figcaption>② With stiffness</figcaption></figure>
+<figure class="tall"><video src="../../assets/video/arm_nostiff.mp4" poster="../../assets/video/arm_nostiff.jpg" controls preload="none" muted playsinline></video><figcaption>① Without stiffness</figcaption></figure>
+<figure class="tall"><video src="../../assets/video/arm_stiff.mp4" poster="../../assets/video/arm_stiff.jpg" controls preload="none" muted playsinline></video><figcaption>② With stiffness</figcaption></figure>
 </div>
 
 <div class="nextlink"><a href="../cerebellar-snn/">← Previous: Cerebellar SNN</a><a href="../tiago-pro/">Next: TIAGo Pro →</a></div>
