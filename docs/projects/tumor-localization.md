@@ -7,7 +7,7 @@ title: Tumor localization
 
 # Tumor localization by bioimpedance palpation
 
-<p class="lede">A surgical robot finds a tumor by touch: the shape is recovered with only 25–50% of the samples, with recall above 90%.</p>
+<p class="lede">A surgical robot finds a tumor by palpation: the shape is recovered with only 25–50% of the samples, with recall above 90%.</p>
 
 <div class="chips"><span>dVRK PSM2</span><span>ROS</span><span>RViz</span><span>MATLAB</span><span>Gaussian Process</span><span>Electrical bioimpedance</span><span>RealSense</span></div>
 
@@ -15,7 +15,7 @@ title: Tumor localization
 
 | | |
 |---|---|
-| **Motivation** | Replace computer vision for locating a tumor and estimating its shape, aiming at a minimally invasive intervention |
+| **Motivation** | Locate a tumor and estimate its shape where vision cannot see, beneath the tissue surface, for minimally invasive surgery |
 | **Robot** | da Vinci Research Kit (dVRK), patient-side manipulator PSM2 |
 | **Sensing** | Electrical bioimpedance (EBI) probe in direct tissue contact |
 | **Planner** | Gaussian Process, active area search (MATLAB) |
@@ -42,7 +42,7 @@ title: Tumor localization
 <div class="node magenta">5 · Map & validation<small>ground truth vs estimate</small></div>
 </div>
 
-The justification is to **replace artificial vision** for locating and estimating the shape of a tumor, aiming at a minimally invasive intervention. The dVRK manipulator palpates the tissue directly, and the bioimpedance reading tells stiff, abnormal tissue from healthy tissue.
+The dVRK manipulator palpates the tissue directly, and the bioimpedance reading tells stiff, abnormal tissue from healthy tissue.
 
 ## Simulation first: kinematics and a 20×20 sampling grid
 
@@ -59,7 +59,7 @@ As a first step I configured the **sensor driver in simulation** and built a sim
 
 ## Active sampling with Gaussian Processes
 
-I verified the algorithm based on **active area search** and compared it with the ground truth. A Gaussian Process models tissue stiffness (impedance) and **picks the next point to palpate**. It reconstructs the shape of the tumor using only **25 to 50 percent of the samples**, with a **recall above 90 percent**. The estimate is then projected onto a point cloud.
+I integrated a Gaussian Process **active area search** planner and compared its output with the ground truth. The Gaussian Process models tissue stiffness (impedance) and **picks the next point to palpate**. It reconstructs the shape of the tumor using only **25 to 50 percent of the samples**, with a **recall above 90 percent**. The estimate is then projected onto a point cloud.
 
 <div class="media">
 <figure><img src="../../assets/img/tumor_gp.jpg" alt="Ground truth and active area search stiffness maps, with RViz and MATLAB views"><figcaption>Ground truth stiffness map vs active area search, with the RViz and MATLAB views</figcaption></figure>
@@ -78,6 +78,6 @@ Both maps capture the central anomaly with high geometric fidelity. The red-yell
 This validation needs **point-cloud processing and camera calibration**. The four **fiducial markers** calibrate the camera, and the estimated tumor is overlaid on the 3D point cloud captured by an Intel RealSense depth sensor.
 
 !!! note "About the tissue"
-    There are no experiments with organic tissue yet. On a **sponge phantom** I used liquid soap and water to obtain different impedance readings.
+    The reported experiments use a **sponge phantom**, with liquid soap and water to create different impedance readings.
 
 <div class="nextlink"><a href="../tiago-pro/">← Previous: TIAGo Pro</a><a href="../formation-control/">Next: Formation control →</a></div>

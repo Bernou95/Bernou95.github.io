@@ -11,7 +11,7 @@ hide:
 <p class="role">Robotics Software Engineer · Granada, Spain</p>
 
 I take robot controllers from simulation to real hardware: real-time torque control on robot arms, ROS 2 interfaces, and deployment on embedded GPUs.
-I am a PhD candidate at the University of Granada, where I combine neuro-inspired control (spiking cerebellar models) with robotics software engineering in C++ and Python.
+I am a PhD candidate at the University of Granada, where I combine neuro-inspired control (spiking cerebellar models) with robotics software engineering using C++ and Python.
 
 [:material-email: Email](mailto:jbernardo.mtzm@outlook.com){ .md-button .md-button--primary }
 [:fontawesome-brands-github: GitHub](https://github.com/Bernou95){ .md-button }
@@ -40,7 +40,7 @@ I am a PhD candidate at the University of Granada, where I combine neuro-inspire
 <span class="when">Jun 2021 – present</span>
 <span class="where">Granada, Spain</span>
 
-- Contributed to the C++ backend of the Neurorobotics Platform, focusing on robustness, performance and maintainability.
+- Contributed to the C++ backend of the [Neurorobotics Platform](https://neurorobotics.net/), focusing on robustness, performance and maintainability.
 - Led the sim-to-real transfer of robot controllers to several robot arms using ROS.
 - Designed real-time torque-control pipelines for manipulators; deployed control models on NVIDIA Jetson AGX Orin.
 - Built a ROS 2 controller interface for the TIAGo Pro arms: safe effort-based control at 500 Hz.
@@ -53,7 +53,7 @@ I am a PhD candidate at the University of Granada, where I combine neuro-inspire
 <span class="where">Lausanne, Switzerland</span>
 
 - Integrated a spino-cerebellar spiking model into a feed-forward control loop for a bio-inspired robot.
-- Built real-time modules bridging spiking models and physical actuators, with KM-RoBoTa, on a dual-actuator robot.
+- Built real-time modules bridging spiking models and physical actuators, with [KM-RoBoTa](https://km-robota.com/), on a dual-actuator robot.
 </div>
 
 <div class="row" markdown>
@@ -62,8 +62,8 @@ I am a PhD candidate at the University of Granada, where I combine neuro-inspire
 <span class="where">Verona, Italy</span>
 
 - Developed a ROS emulator for an electrical bio-impedance (EBI) sensor.
-- Integrated a Gaussian Process trajectory planner for tumor detection on soft tissue with the da Vinci Research Kit.
-- Overlaid the estimated tumor on a 3D point cloud from an Intel RealSense camera.
+- Integrated a trajectory planner for tumor detection and shape estimation using Gaussian Processes on soft tissue with the da Vinci Research Kit.
+- Overlaid the estimated tumor on a 3D point cloud acquired from an Intel RealSense camera.
 </div>
 
 ## Education

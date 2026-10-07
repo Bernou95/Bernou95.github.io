@@ -7,7 +7,7 @@ title: TIAGo Pro
 
 # TIAGo Pro: a ROS 2 torque interface for both arms
 
-<p class="lede">The TIAGo Pro did not expose torque control to users through ROS 2 topics. I built the ROS 2 interface to its arm controllers, with a state machine that allows only one controller (position, velocity or torque) per arm, and ran it on the real robot at 500 Hz.</p>
+<p class="lede">Torque control of both TIAGo Pro arms through ROS 2, running safely on the real robot at 500 Hz.</p>
 
 <div class="chips"><span>ROS 2</span><span>ros2_control</span><span>MoveIt 2</span><span>State machine</span><span>Gazebo Classic</span><span>Docker</span><span>C++</span><span>Python</span></div>
 
@@ -15,7 +15,7 @@ title: TIAGo Pro
 
 | | |
 |---|---|
-| **Motivation** | No torque interface was exposed to the user through ROS 2 topics, so neural and torque controllers could not be tried on the arms |
+| **Motivation** | Bring torque control of both arms to ROS 2 users, so neural and torque controllers can run on the robot |
 | **What I built** | A ROS 2 interface to the arm controllers, plus a state machine that allows **one** controller (position, velocity or torque) per arm at a time |
 | **Safety** | Position hold by default, atomic mode switching, 0.5 s watchdog back to position hold |
 | **Control rate** | Safe effort-based control at 500 Hz, tested on the real robot |
@@ -28,13 +28,13 @@ title: TIAGo Pro
 <figure class="tall"><video src="../../assets/video/tiago.mp4" poster="../../assets/video/tiago.jpg" autoplay loop muted playsinline></video><figcaption>Torque control running on the real TIAGo Pro</figcaption></figure>
 </div>
 
-## 1. The problem: no torque interface for the user
+## The goal: torque control through ROS 2
 
-The TIAGo Pro is a dual-arm mobile manipulator. For my research, I needed to send **torque commands** to its arms, for example from controllers that are learned rather than hand-designed. But the robot did **not expose a torque interface to the user through ROS 2 topics**: there was no ready-made way to publish efforts to the arm controllers.
+The TIAGo Pro is a dual-arm mobile manipulator. The robot supports ROS 2 development, and I extended it with a **torque interface for the user through ROS 2 topics**: a clean way to publish efforts to the arm controllers.
 
-So the work is not a small tweak: it is the **development of the ROS 2 interface itself**, together with the safety logic that makes it usable on a physical robot, where a wrong torque command can damage the hardware.
+The work is the **development of the ROS 2 interface itself**, together with the safety logic that makes it usable on a physical robot, where a wrong torque command can damage the hardware.
 
-## 2. The solution: an interface and a state machine
+## The solution: an interface and a state machine
 
 <div class="flow">
 <div class="node navy">User controller<small>publishes torques or joint commands</small></div>
@@ -74,9 +74,9 @@ Each arm has its own command topics and mode selection, named with an `arm_left_
 - **Switching is requested through the interface,** not by hand-starting and stopping controllers, so the safety logic always runs.
 - **MoveIt 2** plans trajectories, since control stays at joint level, and the robot's own controllers execute them.
 
-## 3. A bug on the way: making mode switches safe
+## Making mode switches safe
 
-Implementing the state machine exposed an engineering problem I am proud of having solved. When you switch an arm from position control to torque control, any gap leaves the arm unsupported.
+Implementing the state machine exposed a subtle problem in the Gazebo simulation plugin. When you switch an arm from position control to torque control, any gap leaves the arm unsupported.
 
 <div class="cols3" markdown>
 <div class="card c1" markdown>
@@ -104,7 +104,7 @@ Implementing the state machine exposed an engineering problem I am proud of havi
 
 My first approach was a two-phase switch with an overlap, but in practice the overlap froze the simulated hardware. The plugin's stop loop did not clear only its own bit: it zeroed the **whole control-method register**, destroying the state of the concurrent effort controller. Batching both lists into a single call means the register is rewritten correctly within the same cycle, so the transition is imperceptible and physically stable. This is what the state machine's mode changes rely on.
 
-## 4. Supporting software
+## Supporting software
 
 <div class="cols4" markdown>
 <div class="card" markdown>
@@ -129,8 +129,8 @@ Circle, infinity, square and target-reaching scripts were unified into **`dual_a
 </div>
 </div>
 
-## 5. Development environment
+## Development environment
 
-The whole environment ran in **Docker on ARM64 macOS**, which required working around a missing Gazebo Classic plugin binary for that architecture. Docker also keeps the robot's own dependencies untouched, which matters because the same dependencies serve all of the robot's controllers.
+The whole environment ran in **Docker**, which required working around a missing Gazebo Classic plugin binary for that architecture. Docker also keeps the robot's own dependencies untouched, which matters because the same dependencies serve all of the robot's controllers.
 
 <div class="nextlink"><a href="../dual-actuation-arm/">← Previous: Dual-actuation arm</a><a href="../tumor-localization/">Next: Tumor localization →</a></div>

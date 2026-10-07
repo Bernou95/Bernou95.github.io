@@ -16,7 +16,7 @@ title: Formation control
 | | |
 |---|---|
 | **Paper** | J. B. Martinez, H. M. Becerra and D. Gomez-Gutierrez. *Formation tracking control and obstacle avoidance of unicycle-type robots guaranteeing continuous velocities.* **Sensors** 2021, 21(13), 4374 |
-| **My role** | First author. Software, methodology, validation (per the paper's author contributions) |
+| **My role** | First author. Software, methodology, validation |
 | **Robots** | Pioneer 3DX (leader) + 2 TurtleBot 2 (followers), differential-drive |
 | **Software** | ROS over WiFi, positions from an OptiTrack motion-capture system |
 | **Later** | Full stack migrated to ROS 2 and Gazebo Sim (Harmonic), refactoring node architecture and communication patterns |

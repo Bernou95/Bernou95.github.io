@@ -4,14 +4,14 @@ title: Projects
 
 # Projects
 
-Five projects, one path: from algorithm to real robot. Click a title for the full story of each project.
+From algorithms to real robots. Click a title for the full story of each project.
 
 <div class="project" markdown>
 <p class="kicker">Project 1 · Neurorobotics</p>
 
 ## [Cerebellar SNN: motor learning from simulation to real robots](cerebellar-snn.md)
 
-<p class="headline">A 70,000-neuron cerebellum model that learns torque control and moves to real robots by switching one ROS topic.</p>
+<p class="headline">A cerebellum model of 70,000+ neurons that learns torque control and moves to real robots by switching one ROS topic.</p>
 
 <div class="media wide-narrow">
 <figure><video src="../assets/video/franka_circle.mp4" poster="../assets/video/franka_circle.jpg" autoplay loop muted playsinline></video><figcaption>Franka Research 3 driven by the SNN on a Jetson Xavier, circular trajectory</figcaption></figure>
@@ -41,16 +41,19 @@ Five projects, one path: from algorithm to real robot. Click a title for the ful
 
 <p class="headline">Lets neural controllers drive a research arm with muscle-like actuators from another computer.</p>
 
-<div class="media three">
+<div class="media two">
 <figure><img src="../assets/img/arm_alpha.jpg" alt="Alpha version of the dual-actuation arm"><figcaption>Alpha version</figcaption></figure>
 <figure><img src="../assets/img/arm_cad.jpg" alt="CAD of the new dual-actuation arm"><figcaption>New version (CAD)</figcaption></figure>
-<figure class="tall"><video src="../assets/video/stiffness_demo.mp4" poster="../assets/video/stiffness_demo.jpg" autoplay loop muted playsinline></video><figcaption>Same trajectory: ① without, then ② with stiffness</figcaption></figure>
+</div>
+<div class="media two">
+<figure class="tall"><video src="../assets/video/arm_nostiff.mp4" poster="../assets/video/arm_nostiff.jpg" controls preload="none" playsinline></video><figcaption>① Without stiffness</figcaption></figure>
+<figure class="tall"><video src="../assets/video/arm_stiff.mp4" poster="../assets/video/arm_stiff.jpg" controls preload="none" playsinline></video><figcaption>② With stiffness</figcaption></figure>
 </div>
 
-- **Challenge:** each joint has agonist and antagonist actuators (adjustable stiffness), but its Raspberry Pi 4 only handles low-level control.
+- **Challenge:** each joint has agonist and antagonist actuators (adjustable stiffness), and its Raspberry Pi 4 controller has no GPU for neural controllers.
 - **My work:** high-level interface in ROS 2 and a Rust + Zenoh link for remote commands, targeting 1 kHz torque control and exchanging kinematics and commands.
-- **Result:** neural controllers run off-board; the clip shows the same trajectory without, then with stiffness.
-- **Context:** EPFL BioRob visit (2025), with KM-RoBoTa on the hardware deployment.
+- **Result:** neural controllers run off-board; the clips compare the arm without and with stiffness.
+- **Context:** EPFL BioRob visit (2025), with [KM-RoBoTa](https://km-robota.com/) on the hardware deployment.
 
 <p class="links"><a href="dual-actuation-arm/">Read the full story →</a></p>
 
@@ -62,16 +65,16 @@ Five projects, one path: from algorithm to real robot. Click a title for the ful
 
 ## [TIAGo Pro: a ROS 2 torque interface for both arms](tiago-pro.md)
 
-<p class="headline">The robot exposed no torque interface to users, so I built one: a ROS 2 interface to the arm controllers with a state machine that allows one controller per arm. Running on the real robot at 500 Hz.</p>
+<p class="headline">I built the missing torque interface for the arms: a ROS 2 interface to the arm controllers with a state machine that allows one controller per arm. Running on the real robot at 500 Hz.</p>
 
 <div class="media narrow-wide">
 <figure class="tall"><video src="../assets/video/tiago.mp4" poster="../assets/video/tiago.jpg" autoplay loop muted playsinline></video><figcaption>Torque control on the real TIAGo Pro</figcaption></figure>
 <figure><img src="../assets/img/tiago_bugfix.jpg" alt="Diagram: problem, root cause and fix of the controller switch"><figcaption>Making mode switches safe: problem, root cause and fix</figcaption></figure>
 </div>
 
-- **Challenge:** no torque interface was exposed to the user through ROS 2 topics.
+- **Challenge:** give users torque control of both arms through ROS 2 topics, safely.
 - **My work:** the ROS 2 interface to the arm controllers, plus a state machine that allows only one controller (position, velocity or torque) per arm at a time. MoveIt 2 for planning, Docker for the environment.
-- **Safe switching:** found a hardware-plugin bug by disassembling its binary. Fix: one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
+- **Safe switching:** found a bug in the Gazebo simulation plugin by disassembling its binary. Fix: one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
 - **Software:** ROS 1 → ROS 2 / MoveIt 2 migration, parametric `arm_{side}` topics, 4 scripts merged into 1 dispatcher, full-body controllers.
 
 <p class="links"><a href="tiago-pro/">Read the full story →</a></p>
@@ -95,7 +98,7 @@ Five projects, one path: from algorithm to real robot. Click a title for the ful
 <figure><img src="../assets/img/tumor_estimate.jpg" alt="Gaussian Process estimate"><figcaption>Estimate from a fraction of the samples</figcaption></figure>
 </div>
 
-- **Challenge:** locate and outline a tumor without computer vision, for minimally invasive surgery.
+- **Challenge:** locate and outline a tumor beneath the tissue surface, where vision cannot see, for minimally invasive surgery.
 - **My work:** dVRK PSM2 palpation with an electrical bioimpedance probe; ROS/RViz simulation and EBI sensor emulator (20×20 grid); Gaussian Process active area search in MATLAB; RealSense point cloud and fiducials for 3D validation.
 - **Result:** the estimate matches the exhaustive ground truth. Tested on a sponge phantom (soap and water for impedance contrast).
 
