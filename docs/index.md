@@ -37,7 +37,7 @@ My work spans C++ and Python development, ROS/ROS 2 middleware, and control for 
 ## Experience
 
 <div class="row" markdown>
-<span class="what">Robotics Software Engineer · University of Granada</span>
+<span class="what">Robotics Software Engineer · University of Granada (Spain)</span>
 <span class="when">Jun 2021 – present</span>
 <span class="where">Granada, Spain</span>
 
@@ -70,11 +70,11 @@ My work spans C++ and Python development, ROS/ROS 2 middleware, and control for 
 ## Education
 
 <div class="row" markdown>
-<span class="what">PhD candidate, Information and Communication Technologies · University of Granada</span>
+<span class="what">PhD candidate, Information and Communication Technologies · University of Granada (Spain)</span>
 <span class="when">2023 – present</span>
 </div>
 <div class="row" markdown>
-<span class="what">MS, Computer Science and Industrial Mathematics · CIMAT</span>
+<span class="what">MS, Computer Science and Industrial Mathematics · CIMAT (Mexico)</span>
 <span class="when">2017 – 2019</span>
 </div>
 <div class="row" markdown>
