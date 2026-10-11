@@ -24,8 +24,9 @@ From algorithms to real robots. Click a title for the full story of each project
 <figure><video src="../assets/video/sim2real_4.mp4" poster="../assets/video/sim2real_4.jpg" autoplay loop muted playsinline></video><figcaption>4 · After ~80 more trials, the error converges</figcaption></figure>
 </div>
 
-- **Challenge:** learn arm control in torque, in real time and safely, on robots with different dynamics.
-- **My work:** Gazebo–EDLUT bridge (Neurorobotics Platform), SNN on GPU including Jetson Xavier/Orin, torque-safety layer, real-robot tests on Franka Research 3, Baxter and Sawyer with Vicon ground truth.
+- **Requirement:** learn joint torque control in real time, on robots with different dynamics, without damaging them.
+- **Key decisions:** NRP/ROS bridge so sim-to-real is a topic change; learn in simulation first; bounded torque output by design; network size and rate scaled per platform; Vicon as independent ground truth.
+- **My work:** Gazebo–EDLUT bridge, GPU and Jetson Xavier/Orin deployment, real-robot tests on Franka Research 3, Baxter and Sawyer.
 - **Result:** ~450 trials (~30 min) in simulation, then ~80 trials on the real robot until the error converged.
 - **Control rate:** PC 500 Hz · Jetson Orin 250 Hz · Jetson Xavier 100 Hz.
 
@@ -39,7 +40,7 @@ From algorithms to real robots. Click a title for the full story of each project
 
 ## [Dual-actuation arm: remote high-level interface](dual-actuation-arm.md)
 
-<p class="headline">Lets neural controllers drive a research arm with muscle-like actuators from another computer.</p>
+<p class="headline">A remote ROS 2 interface for a research arm with muscle-like actuators; the on-board controller stays pure C++.</p>
 
 <div class="media two">
 <figure><img src="../assets/img/arm_alpha.jpg" alt="Alpha version of the dual-actuation arm"><figcaption>Alpha version</figcaption></figure>
@@ -50,9 +51,9 @@ From algorithms to real robots. Click a title for the full story of each project
 <figure class="tall"><video src="../assets/video/arm_stiff.mp4" poster="../assets/video/arm_stiff.jpg" controls preload="none" muted playsinline></video><figcaption>② With stiffness</figcaption></figure>
 </div>
 
-- **Challenge:** each joint has agonist and antagonist actuators (adjustable stiffness), and its Raspberry Pi 4 controller has no GPU for neural controllers.
-- **My work:** high-level interface in ROS 2 and a Rust + Zenoh link for remote commands, targeting 1 kHz torque control and exchanging kinematics and commands.
-- **Result:** neural controllers run off-board; the clips compare the arm without and with stiffness.
+- **Requirement:** run neural controllers off-board (the Raspberry Pi 4 has no GPU) and expose the arm to ROS 2 users, targeting 1 kHz torque control.
+- **Key decisions:** no ROS 2 on the robot (pure C++); Zenoh bridges ROS 2 on the PC to the robot, keeping both sides compatible.
+- **My work:** the remote ROS 2 interface and command link (Rust + Zenoh), exchanging commands and kinematics. The clips compare the arm without and with stiffness.
 - **Context:** EPFL BioRob visit (2025), with [KM-RoBoTa](https://km-robota.com/) on the hardware deployment.
 
 <p class="links"><a href="dual-actuation-arm/">Read the full story →</a></p>
@@ -65,17 +66,15 @@ From algorithms to real robots. Click a title for the full story of each project
 
 ## [TIAGo Pro: a ROS 2 torque interface for both arms](tiago-pro.md)
 
-<p class="headline">I built the missing torque interface for the arms: a ROS 2 interface to the arm controllers with a state machine that allows one controller per arm. Running on the real robot at 500 Hz.</p>
+<p class="headline">Safe torque control of both arms over ROS 2 at 500 Hz, validated on the real robot.</p>
 
-<div class="media narrow-wide">
+<div class="media">
 <figure class="tall"><video src="../assets/video/tiago.mp4" poster="../assets/video/tiago.jpg" autoplay loop muted playsinline></video><figcaption>Torque control on the real TIAGo Pro</figcaption></figure>
-<figure><img src="../assets/img/tiago_bugfix.jpg" alt="Diagram: problem, root cause and fix of the controller switch"><figcaption>Making mode switches safe: problem, root cause and fix</figcaption></figure>
 </div>
 
-- **Challenge:** give users torque control of both arms through ROS 2 topics, safely.
-- **My work:** the ROS 2 interface to the arm controllers, plus a state machine that allows only one controller (position, velocity or torque) per arm at a time. MoveIt 2 for planning, Docker for the environment.
-- **Safe switching:** found a bug in the Gazebo simulation plugin by disassembling its binary. Fix: one atomic `switch_controller` call, position hold at startup, 0.5 s watchdog fallback.
-- **Software:** ROS 1 → ROS 2 / MoveIt 2 migration, parametric `arm_{side}` topics, 4 scripts merged into 1 dispatcher, full-body controllers.
+- **Requirement:** external controllers stream joint torques over ROS 2 topics at 500 Hz, with one controller owning each arm and a fail-safe fallback.
+- **Key decisions:** reuse ros2_control controllers (vendor stack untouched); a per-arm state machine decides which loaded controller claims the joints; position hold at startup and a 0.5 s watchdog; Docker for a reproducible setup.
+- **Supporting work:** ROS 1 → ROS 2 / MoveIt 2 migration for test trajectories, parametric `arm_{side}` nodes, a dual-arm trajectory dispatcher, full-body controllers.
 
 <p class="links"><a href="tiago-pro/">Read the full story →</a></p>
 
@@ -98,7 +97,8 @@ From algorithms to real robots. Click a title for the full story of each project
 <figure><img src="../assets/img/tumor_estimate.jpg" alt="Gaussian Process estimate"><figcaption>Estimate from a fraction of the samples</figcaption></figure>
 </div>
 
-- **Challenge:** locate and outline a tumor beneath the tissue surface, where vision cannot see, for minimally invasive surgery.
+- **Requirement:** locate and outline a tumor beneath the tissue surface, where vision cannot see, with as few palpations as possible.
+- **Key decisions:** Gaussian Process active search instead of an exhaustive sweep; an EBI sensor emulator to validate before hardware.
 - **My work:** dVRK PSM2 palpation with an electrical bioimpedance probe; ROS/RViz simulation and EBI sensor emulator (20×20 grid); Gaussian Process active area search in MATLAB; RealSense point cloud and fiducials for 3D validation.
 - **Result:** the estimate matches the exhaustive ground truth. Tested on a sponge phantom (soap and water for impedance contrast).
 

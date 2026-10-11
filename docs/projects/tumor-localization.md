@@ -7,7 +7,7 @@ title: Tumor localization
 
 # Tumor localization by bioimpedance palpation
 
-<p class="lede">A surgical robot finds a tumor by palpation: the shape is recovered with only 25–50% of the samples, with recall above 90%.</p>
+<p class="lede">A surgical robot locates a tumor by palpation and recovers its shape with only 25–50% of the samples, at recall above 90%.</p>
 
 <div class="chips"><span>dVRK PSM2</span><span>ROS</span><span>RViz</span><span>MATLAB</span><span>Gaussian Process</span><span>Electrical bioimpedance</span><span>RealSense</span></div>
 
@@ -15,10 +15,10 @@ title: Tumor localization
 
 | | |
 |---|---|
-| **Motivation** | Locate a tumor and estimate its shape where vision cannot see, beneath the tissue surface, for minimally invasive surgery |
+| **Goal** | Locate a tumor beneath the tissue surface, where vision cannot see, for minimally invasive surgery |
 | **Robot** | da Vinci Research Kit (dVRK), patient-side manipulator PSM2 |
 | **Sensing** | Electrical bioimpedance (EBI) probe in direct tissue contact |
-| **Planner** | Gaussian Process, active area search (MATLAB) |
+| **Planner** | Gaussian Process active area search (MATLAB) |
 | **Result** | Tumor shape reconstructed with 25–50% of the samples, recall >90% against ground truth |
 | **Context** | Visiting researcher, Altair Robotics Laboratory, Verona (Jan – Jul 2020) |
 
@@ -28,7 +28,14 @@ title: Tumor localization
 <figure><img src="../../assets/img/tumor_setup_big.jpg" alt="dVRK PSM2 palpating a sponge phantom with fiducial markers"><figcaption>Experimental setup: dVRK PSM2 palpating a sponge phantom with fiducial markers</figcaption></figure>
 </div>
 
-## The pipeline
+## Requirements
+
+- Find and outline a tumor by **touch**, using bioimpedance (abnormal tissue reads differently from healthy tissue).
+- **Minimize the number of palpations** compared with an exhaustive sweep.
+- **Validate the software before** any trial on the physical robot.
+- Measure accuracy against an **exhaustive ground truth** and show the result in **3D**.
+
+## Architecture
 
 <div class="flow">
 <div class="node blue">1 · 3D acquisition<small>ROI point cloud and optical markers</small></div>
@@ -42,30 +49,26 @@ title: Tumor localization
 <div class="node magenta">5 · Map & validation<small>ground truth vs estimate</small></div>
 </div>
 
-The dVRK manipulator palpates the tissue directly, and the bioimpedance reading tells stiff, abnormal tissue from healthy tissue.
+ROS nodes synchronize the sensor, the manipulator and the planner. The region of interest is discretized in a **20 × 20 grid (400 points)**; the planner decides which cells actually need palpation.
 
-## Simulation first: kinematics and a 20×20 sampling grid
+## Key design decisions
 
-As a first step I configured the **sensor driver in simulation** and built a simulation setup (a ROS-based emulator of the EBI sensor), so the software could be validated before any physical trial.
+| Decision | Alternative | Rationale |
+|---|---|---|
+| **Gaussian Process active area search** picks the next point to palpate | Exhaustive 20 × 20 sweep | Reconstructs the tumor with **25–50% of the samples** at recall above 90%, so far fewer contacts with the tissue |
+| **ROS-based EBI sensor emulator** and an RViz model of the arm | Develop directly on the hardware | The whole pipeline (kinematics, safe trajectories, workspace, planner) is validated before any physical trial |
+| **Fiducial markers + RealSense point cloud** | 2D maps only | Calibrates the camera and overlays the estimate on the 3D surface for validation |
 
 <div class="media two">
 <figure><img src="../../assets/img/tumor_rviz_arm.jpg" alt="da Vinci arm model in RViz"><figcaption>Digital model of the da Vinci arm in RViz</figcaption></figure>
 <figure><img src="../../assets/img/tumor_rviz_grid.jpg" alt="400-point grid with the simulated tumor in green"><figcaption>400-point grid with the simulated tumor (green cylinder)</figcaption></figure>
 </div>
 
-- The **arm and its end effector are modeled digitally**, with kinematic control of safe trajectories and verification of the workspace.
-- **ROS nodes synchronize** sensors, manipulator and planner.
-- The area to explore is discretized in a **20 × 20 grid (400 points)** for the impedance sweep. This gives the algorithm the spatial base for deciding **which cells actually need palpation**.
-
-## Active sampling with Gaussian Processes
-
-I integrated a Gaussian Process **active area search** planner and compared its output with the ground truth. The Gaussian Process models tissue stiffness (impedance) and **picks the next point to palpate**. It reconstructs the shape of the tumor using only **25 to 50 percent of the samples**, with a **recall above 90 percent**. The estimate is then projected onto a point cloud.
+## Results
 
 <div class="media">
 <figure><img src="../../assets/img/tumor_gp.jpg" alt="Ground truth and active area search stiffness maps, with RViz and MATLAB views"><figcaption>Ground truth stiffness map vs active area search, with the RViz and MATLAB views</figcaption></figure>
 </div>
-
-## 3D validation: the estimate reproduces the tumor core
 
 <div class="media three">
 <figure><img src="../../assets/img/tumor_surface.jpg" alt="3D surface map from a depth sensor"><figcaption>3D surface map: depth sensor, 4 fiducial markers, circular region of interest</figcaption></figure>
@@ -73,11 +76,8 @@ I integrated a Gaussian Process **active area search** planner and compared its 
 <figure><img src="../../assets/img/tumor_estimate.jpg" alt="Planned estimate with reduced samples"><figcaption>Planned estimate: reduced samples, same position and shape</figcaption></figure>
 </div>
 
-Both maps capture the central anomaly with high geometric fidelity. The red-yellow core is the **high-stiffness, high-impedance region** that corresponds to the tumor, and the exhaustive ground truth is the base for computing recall. The estimate preserves the position and concentric shape of the tumor, with a smooth transition toward the edges.
-
-This validation needs **point-cloud processing and camera calibration**. The four **fiducial markers** calibrate the camera, and the estimated tumor is overlaid on the 3D point cloud captured by an Intel RealSense depth sensor.
-
-!!! note "About the tissue"
-    The reported experiments use a **sponge phantom**, with liquid soap and water to create different impedance readings.
+- The estimate reproduces the **position and concentric shape** of the tumor core (the high-impedance red-yellow region), with **recall above 90%** against the exhaustive ground truth.
+- Achieved with **25–50% of the samples** of a full sweep.
+- Reported experiments use a **sponge phantom**, with liquid soap and water to create the impedance contrast.
 
 <div class="nextlink"><a href="../tiago-pro/">← Previous: TIAGo Pro</a><a href="../formation-control/">Next: Formation control →</a></div>

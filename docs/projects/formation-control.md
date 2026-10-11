@@ -50,6 +50,13 @@ A group of mobile robots must **keep a formation** while a leader follows a traj
 - It is **fully distributed**: each robot needs only relative information from its neighbors and local obstacle measurements, so **no global coordinate system or map** is required.
 - It is **scalable** to many robots and **generic**: any desired formation can be defined.
 
+## Key design decisions
+
+| Decision | Alternative | Rationale |
+|---|---|---|
+| **Hierarchical task control**: avoidance over formation tracking | A single controller that blends both objectives | Avoidance always takes precedence near an obstacle, and the smooth transition keeps velocities continuous with proven stability |
+| **Consensus-based** formation tracking | Centralized control in a global frame | Fully distributed: each robot uses only relative neighbor data and local sensing, with no global frame or map |
+
 The paper also evaluates the scheme in simulation with 4 and 10 agents and in environments with unknown polygonal obstacles, before the real-robot experiments below.
 
 ## Real-robot experiments

@@ -7,7 +7,7 @@ title: TIAGo Pro
 
 # TIAGo Pro: a ROS 2 torque interface for both arms
 
-<p class="lede">Torque control of both TIAGo Pro arms through ROS 2, running safely on the real robot at 500 Hz.</p>
+<p class="lede">Safe torque control of both TIAGo Pro arms over ROS 2 at 500 Hz, validated on the real robot.</p>
 
 <div class="chips"><span>ROS 2</span><span>ros2_control</span><span>MoveIt 2</span><span>State machine</span><span>Gazebo Classic</span><span>Docker</span><span>C++</span><span>Python</span></div>
 
@@ -15,12 +15,11 @@ title: TIAGo Pro
 
 | | |
 |---|---|
-| **Motivation** | Bring torque control of both arms to ROS 2 users, so neural and torque controllers can run on the robot |
-| **What I built** | A ROS 2 interface to the arm controllers, plus a state machine that allows **one** controller (position, velocity or torque) per arm at a time |
-| **Safety** | Position hold by default, atomic mode switching, 0.5 s watchdog back to position hold |
-| **Control rate** | Safe effort-based control at 500 Hz, tested on the real robot |
-| **Planning** | MoveIt 2 for trajectory planning (control stays at joint level) |
-| **Environment** | Docker, so the robot's own dependencies are never broken; Gazebo simulation first |
+| **Outcome** | External controllers (e.g. neural controllers) can command joint torques on both arms through ROS 2 topics |
+| **What I built** | A ROS 2 mode-manager node on top of ros2_control: one active controller per arm (position, velocity or effort), selected by a state machine |
+| **Control rate** | 500 Hz effort control, tested on the real robot |
+| **Safety** | Position hold at startup, 0.5 s command watchdog that falls back to position hold |
+| **Stack** | C++ and Python nodes, ros2_control, MoveIt 2, Gazebo Classic, Docker |
 
 </div>
 
@@ -28,109 +27,49 @@ title: TIAGo Pro
 <figure class="tall"><video src="../../assets/video/tiago.mp4" poster="../../assets/video/tiago.jpg" autoplay loop muted playsinline></video><figcaption>Torque control running on the real TIAGo Pro</figcaption></figure>
 </div>
 
-## The goal: torque control through ROS 2
+## Requirements
 
-The TIAGo Pro is a dual-arm mobile manipulator. The robot supports ROS 2 development, and I extended it with a **torque interface for the user through ROS 2 topics**: a clean way to publish efforts to the arm controllers.
+- Stream **joint torques** from an external controller over **ROS 2 topics at 500 Hz**.
+- **Exactly one controller owns each arm** at any time; the two arms are independent.
+- **Fail safe:** if the command stream stops, the arm holds its position.
+- Leave the **vendor software stack unmodified**.
+- A **reproducible** development and deployment environment.
 
-The work is the **development of the ROS 2 interface itself**, together with the safety logic that makes it usable on a physical robot, where a wrong torque command can damage the hardware.
-
-## The solution: an interface and a state machine
+## Architecture
 
 <div class="flow">
 <div class="node navy">User controller<small>publishes torques or joint commands</small></div>
 <div class="arr">⟶<small>ROS 2 topics</small></div>
-<div class="node teal">Motion controller interface<small>state machine, one mode per arm</small></div>
-<div class="arr">⟶<small>ros2_control</small></div>
+<div class="node teal">Mode manager<small>state machine, one mode per arm</small></div>
+<div class="arr">⟶<small>controller_manager</small></div>
 <div class="node slate">Arm controllers<small>position · velocity · effort</small></div>
 <div class="arr">⟶</div>
 <div class="node rust">TIAGo Pro arms<small>or Gazebo simulation</small></div>
 </div>
 
-Each arm has its own command topics and mode selection, named with an `arm_left_` / `arm_right_` prefix (for example `arm_left_effort_joint_controller/commands`). Behind them, a **state machine** applies one rule: **only one controller is active per arm** at any time.
+Users publish commands on per-arm topics (for example `arm_left_effort_joint_controller/commands`) and request a mode through the interface. The mode manager runs one state machine per arm and asks `controller_manager` to activate the matching ros2_control controller. All three controllers can be loaded and waiting, but only the active one claims the arm's joint interfaces.
 
-<div class="cols3" markdown>
-<div class="card c1" markdown>
-<p class="ctitle">Position mode</p>
+## Key design decisions
 
-- **Default state at startup:** the arm holds its posture rigidly.
-- Used for planning and as the safe fallback.
-</div>
-<div class="card c2" markdown>
-<p class="ctitle">Velocity mode</p>
+| Decision | Alternative | Rationale |
+|---|---|---|
+| Reuse ros2_control controllers through `controller_manager` | Write a custom hardware interface | Keeps the vendor's tested hardware layer untouched; the work stays in user space |
+| Per-arm **state machine** decides which controller is active | Users start and stop controllers by hand | Several controllers can be loaded and waiting, but only one can claim an arm's joint interfaces. The state machine makes ownership explicit and every switch goes through the same safety logic |
+| **Topic streaming** for commands | Services or actions | Continuous 500 Hz command stream; any external controller can publish without depending on my code |
+| **Position hold** as the startup and fallback state | Start in effort mode | The arm is supported before the first torque command arrives |
+| **0.5 s command watchdog** back to position hold | No timeout, or a very short one | Tolerates transport delays without false triggers, but is short enough to stop the arm before it can fall or self-collide. Tuned empirically on the robot |
+| `arm_{side}` **parameterized** nodes (`declare_parameter`) | One copy of the code per arm | A single binary controls either arm, selected at launch without recompiling |
+| **Docker** environment | Native install on the robot PC | Reproducible setup; the robot's own dependencies, shared by all its controllers, stay untouched |
 
-- One of the three exclusive controllers.
-- Only active when the position and torque controllers are not.
-</div>
-<div class="card c3" markdown>
-<p class="ctitle">Torque (effort) mode</p>
+## Verification
 
-- Accepts torque commands from the user's topics.
-- A **0.5 s watchdog** aborts to position hold if the command stream stops.
-</div>
-</div>
+- Developed and tested first in **Gazebo**, then deployed on the **real robot**.
+- Effort control running at **500 Hz** on the real robot (video above). The arms are independent: one can run in torque mode while the other holds position.
 
-- **One controller per arm** prevents conflicting commands from reaching the same joints.
-- The two arms are **independent**: one can be in torque mode while the other holds position.
-- **Switching is requested through the interface,** not by hand-starting and stopping controllers, so the safety logic always runs.
-- **MoveIt 2** plans trajectories, since control stays at joint level, and the robot's own controllers execute them.
+## Supporting work
 
-## Making mode switches safe
-
-Implementing the state machine exposed a subtle problem in the Gazebo simulation plugin. When you switch an arm from position control to torque control, any gap leaves the arm unsupported.
-
-<div class="cols3" markdown>
-<div class="card c1" markdown>
-<p class="ctitle">1 · Problem</p>
-
-- Gazebo needs ~15 s to start; torque commands begin at zero, so **gravity collapses the arms**.
-- A naive position → effort switch leaves **~200 ms of free fall**.
-- A two-phase switch with a **300 ms overlap froze the hardware registers**.
-</div>
-<div class="card c2" markdown>
-<p class="ctitle">2 · Root cause</p>
-
-- Found by **disassembling the PAL hardware plugin** (`libgazebo_hardware_plugins.so`).
-- With both controllers active: `joint_control_method = 0x01 | 0x04 = 0x05`.
-- Stopping the position controller **cleared the whole register to `0x00`**, killing the effort controller too.
-</div>
-<div class="card c3" markdown>
-<p class="ctitle">3 · Fix</p>
-
-- **One atomic `switch_controller` call:** `activate=[effort]`, `deactivate=[position]`.
-- The stop loop clears the register and the start loop rewrites `0x04` **in the same cycle**.
-- **Position mode forced at startup** plus the **0.5 s watchdog** that falls back to position hold.
-</div>
-</div>
-
-My first approach was a two-phase switch with an overlap, but in practice the overlap froze the simulated hardware. The plugin's stop loop did not clear only its own bit: it zeroed the **whole control-method register**, destroying the state of the concurrent effort controller. Batching both lists into a single call means the register is rewritten correctly within the same cycle, so the transition is imperceptible and physically stable. This is what the state machine's mode changes rely on.
-
-## Supporting software
-
-<div class="cols4" markdown>
-<div class="card" markdown>
-<p class="ctitle">ROS 1 → ROS 2 migration</p>
-The trajectory-planning setup was developed in MoveIt with ROS 1. Migration to MoveIt 2 was needed to test different trajectories. MoveIt in ROS 2 requires a **secondary executor thread** (`rclpy.spin`) in the background. Planning groups and joints were renamed (`arm_right`, `arm_right_[1-7]_joint`).
-<p class="cstack">rclpy · MoveIt 2</p>
-</div>
-<div class="card" markdown>
-<p class="ctitle">Parametric multi-arm topics</p>
-Hard-coded topics were replaced by **`arm_{side}_` prefixes** resolved with `declare_parameter` in the C++ nodes, so a single binary controls either arm, selected at launch **without recompiling**.
-<p class="cstack">C++ · ROS 2 params</p>
-</div>
-<div class="card" markdown>
-<p class="ctitle">4 scripts → 1 dispatcher</p>
-Circle, infinity, square and target-reaching scripts were unified into **`dual_arm_trajectory.py`**, selected with `trajectory:=circle`. It solves **inverse kinematics for both arms** at once.
-<p class="cstack">Python · IK</p>
-</div>
-<div class="card" markdown>
-<p class="ctitle">Full-body activation</p>
-`full_controllers:=true` brings up **head, torso and mobile base**: leaving the body inert caused physical drift from the arms' reaction forces. The joint-state broadcaster now **auto-discovers every joint in the URDF** instead of using a fixed list of 14.
-<p class="cstack">ros2_control · URDF</p>
-</div>
-</div>
-
-## Development environment
-
-The whole environment ran in **Docker**. Docker also keeps the robot's own dependencies untouched, which matters because the same dependencies serve all of the robot's controllers.
+- **ROS 1 → ROS 2 / MoveIt 2 migration.** The TIAGo Pro has no ROS 1 support, and the controllers needed test trajectories, so I ported the trajectory-planning code to MoveIt 2 (with a background `rclpy` executor thread, as MoveIt 2 requires).
+- **Trajectory dispatcher.** Four scripts (circle, infinity, square, target reaching) unified into `dual_arm_trajectory.py`, selected with `trajectory:=circle`, solving inverse kinematics for both arms.
+- **Full-body controllers.** `full_controllers:=true` also brings up head, torso and mobile base, which prevents drift from the arms' reaction forces; the joint-state broadcaster discovers every joint from the URDF.
 
 <div class="nextlink"><a href="../dual-actuation-arm/">← Previous: Dual-actuation arm</a><a href="../tumor-localization/">Next: Tumor localization →</a></div>

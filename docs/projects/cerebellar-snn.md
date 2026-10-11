@@ -7,7 +7,7 @@ title: Cerebellar SNN
 
 # Cerebellar SNN: motor learning from simulation to real robots
 
-<p class="lede">An SNN cerebellum model that learns torque control in simulation, then finishes learning on real robots by switching a single ROS topic.</p>
+<p class="lede">A 70,000+ neuron spiking cerebellum model that learns joint torque control in simulation and finishes learning on three real robots, at up to 500 Hz.</p>
 
 <div class="chips"><span>ROS</span><span>EDLUT</span><span>Gazebo</span><span>Neurorobotics Platform</span><span>GPU</span><span>Jetson Xavier / Orin</span><span>Vicon</span></div>
 
@@ -15,13 +15,12 @@ title: Cerebellar SNN
 
 | | |
 |---|---|
-| **Model** | Spiking neural network (SNN) mirroring the cerebellar circuit, 70,000+ neurons |
-| **Output** | Joint torque command, so real-time and safety constraints apply |
+| **Model** | Spiking neural network (SNN) mirroring the cerebellar circuit, 70,000+ neurons, joint torque output |
 | **Robots** | Franka Research 3, Baxter, Sawyer |
-| **Compute** | Desktop PC with GPU, Jetson Xavier, Jetson Orin |
+| **Compute** | Desktop PC with GPU, Jetson Orin, Jetson Xavier |
 | **Control rate** | PC 500 Hz · Jetson Orin 250 Hz · Jetson Xavier 100 Hz |
 | **Sim-to-real** | ~450 trials (~30 min) in simulation, then ~80 trials on the real robot until the error converged |
-| **My role** | Simulator bridge, Jetson port, torque-safety layer, real-robot experiments |
+| **My role** | Simulator bridge, GPU and Jetson deployment, real-robot experiments |
 
 </div>
 
@@ -30,33 +29,49 @@ title: Cerebellar SNN
 <figure class="tall"><video src="../../assets/video/baxter.mp4" poster="../../assets/video/baxter.jpg" autoplay loop muted playsinline></video><figcaption>Baxter, the hardest of the three robots</figcaption></figure>
 </div>
 
-## The idea: copy the cerebellum
+## Requirements
 
-The cerebellum plays a central role in motor coordination and in error-driven adaptation. Taking inspiration from its structure, I used a spiking neural network for motor learning. Its layers mirror the cerebellar circuit: **mossy fibers, granule cells, Purkinje cells, climbing fibers and deep cerebellar nuclei**.
+- Learn **joint torque control** online with a cerebellum-inspired SNN.
+- Run in **real time**: up to 500 Hz on a desktop GPU, and on embedded **Jetson** boards.
+- **Never damage the robot** while the network is still learning.
+- **One controller for several robots** with different, partly elastic dynamics.
+- Measure performance **independently** of the robot's own sensors.
 
-The network learns when it receives two kinds of signals: sensory input and an **error (teaching) signal**. Learning is supervised: the network improves motion control by repeating a movement. The model contains more than **70,000 neurons**, and its output is a **torque signal**. That single fact drives most of the engineering in this project: it has to run in real time, on a GPU, and with safety mechanisms.
+## The model
+
+The network mirrors the cerebellar circuit (mossy fibers, granule cells, Purkinje cells, climbing fibers and deep cerebellar nuclei). It receives sensory input and an **error (teaching) signal**, and improves a movement by repeating it: supervised, trial-by-trial learning. Its output is a **joint torque command**, which is what makes this a real-time, safety-critical systems problem.
 
 <div class="media two">
 <figure><img src="../../assets/img/cerebellum_circuit.jpg" alt="Detailed cerebellar microcircuit"><figcaption>Cerebellar microcircuit: parallel fibers, granule, Purkinje and nuclear cells</figcaption></figure>
 <figure><img src="../../assets/img/cerebellum_simple.jpg" alt="Simplified cerebellar model with sensory input, teaching signal and motor output"><figcaption>The simplified model: sensory input, teaching signal, motor output</figcaption></figure>
 </div>
 
-## One bridge between two simulators
+## Architecture
 
-A physics simulator such as **Gazebo** and a spiking-network simulator such as **EDLUT** cannot talk to each other natively. I worked with the **Neurorobotics Platform (NRP)**, a ROS-compatible platform through which the two simulators communicate. Because it is compatible with ROS, **moving to hardware only requires changing the ROS topic**: the network keeps sending torques as before.
+<div class="flow">
+<div class="node navy">Network host<small>Desktop PC or Jetson Xavier / Orin<br>runs the SNN (EDLUT, GPU)</small></div>
+<div class="arr">⟶<small>torques over ROS</small></div>
+<div class="node teal">Robot or Gazebo<small>Franka Research 3 · Baxter · Sawyer</small></div>
+<div class="arr">⟶<small>end-effector pose</small></div>
+<div class="node slate">Vicon cameras<small>independent ground truth</small></div>
+</div>
 
-The clip shows the network controlling the simulated arm. After repeating a movement many times, for example a closed trajectory, the system performs it better. The plots at the top track **position and velocity error** to verify learning, and the plots at the bottom show the **activations of some neuron layers**.
+The SNN runs in **EDLUT** and the robot in **Gazebo** or on hardware; the **Neurorobotics Platform (NRP)** connects them over ROS. A separate PC handles live plots so it does not load the network host.
 
 <div class="media">
 <figure><video src="../../assets/video/sim_error.mp4" poster="../../assets/video/sim_error.jpg" autoplay loop muted playsinline></video><figcaption>Simulated arm learning a trajectory: error plots (top) and layer activity (bottom)</figcaption></figure>
 </div>
 
-!!! note "Why simulate first"
-    Simulation is the safest scenario. Early in learning, movements can be violent and would damage the real motors, through collisions, discontinuous signals or sudden changes in motor direction.
+## Key design decisions
 
-## One neural controller, three robots, one embedded platform
-
-The goal was a **general solution**, so I tested the neural controller using three collaborative robots (cobots) with different dynamics. All three have dynamics that are not completely rigid, because of some elastic components. **Baxter**, with its external springs, is the hardest to learn.
+| Decision | Alternative | Rationale |
+|---|---|---|
+| Couple EDLUT and Gazebo through the **NRP over ROS** | A custom simulator coupling | One ROS interface for simulation and hardware, so moving to the real robot is a **topic change**, not a code change |
+| **Learn in simulation first**, then continue on hardware | Learn directly on the robot | Early learning produces erratic torques; simulation absorbs them, and only a stable network reaches the motors |
+| **Safety by design**: the network's torque output is **bounded** | An external safety filter added afterwards | The controller cannot command torques outside its range, even while learning |
+| **Scale network size and update rate per platform** | One configuration everywhere | Keeps real time on each target: PC 500 Hz, Orin 250 Hz, Xavier 100 Hz |
+| Learn at **joint level**, validate in **Cartesian space with Vicon** | Rely on the robot's own encoders | An independent measurement of what the end effector actually does |
+| Test on **three cobots** (Franka, Baxter, Sawyer) | Tune for a single robot | Shows the controller generalizes, including Baxter's elastic joints |
 
 <div class="media four">
 <figure class="sq"><img src="../../assets/img/robot_sawyer.jpg" alt="Sawyer"><figcaption>Sawyer</figcaption></figure>
@@ -65,78 +80,27 @@ The goal was a **general solution**, so I tested the neural controller using thr
 <figure class="sq"><img src="../../assets/img/jetson.jpg" alt="NVIDIA Jetson"><figcaption>NVIDIA Jetson Xavier / Orin</figcaption></figure>
 </div>
 
-Because the output of the cerebellum is a torque signal, the work comes with four constraints:
-
-- **Real time** at the highest frequency possible.
-- **GPU use and parallelization** to run the SNN in real time.
-- **Safety mechanisms** to operate in torque.
-- **An embedded target**: I ran it on both a Jetson Xavier and a Jetson Orin.
-
-## Experimental setup
-
-<div class="flow">
-<div class="node navy">Network host<small>Desktop PC or Jetson Xavier / Orin<br>runs the SNN</small></div>
-<div class="arr">⟶<small>torque commands</small></div>
-<div class="node teal">Robot<small>Franka Research 3 · Baxter · Sawyer</small></div>
-<div class="arr">⟶<small>end-effector pose</small></div>
-<div class="node slate">Vicon cameras<small>independent ground truth</small></div>
-</div>
-<div class="flow">
-<div class="node slate">Monitoring PC<small>live plots only, so it does not load the network host</small></div>
-</div>
-
-- A **separate PC** is used only for plotting and monitoring, so it does not consume resources of the machine that runs the network.
-- A **Vicon** camera system verifies the Cartesian position of the end effector, independently of the robot's own sensors.
-- Every link goes through **ROS topics**, so simulation and hardware share one interface.
-
-| Network host | Control frequency |
-|---|---|
-| Desktop PC | 500 Hz |
-| Jetson Orin | 250 Hz |
-| Jetson Xavier | 100 Hz |
-
-<div class="media">
-<figure><video src="../../assets/video/live_setup.mp4" poster="../../assets/video/live_setup.jpg" autoplay loop muted playsinline></video><figcaption>Monitoring screen during an experiment</figcaption></figure>
-</div>
-
-## Results on real hardware
-
-The cerebellum running on the Jetson Xavier controls the **Franka Research 3** along a circular trajectory. The trajectory is tracked in Cartesian space with Vicon as an independent ground truth, while the network runs in real time on embedded hardware.
-
-The second clip is a typical run on **Baxter**, the hardest of the three: its external springs make it the most demanding dynamics to learn.
-
-## Sim-to-real: how the transfer works
+## Sim-to-real transfer
 
 <div class="media two">
-<figure><video src="../../assets/video/sim2real_1.mp4" poster="../../assets/video/sim2real_1.jpg" autoplay loop muted playsinline></video><figcaption>1 · Learning starts in simulation: erratic movements that could be very harmful for the motors</figcaption></figure>
-<figure><video src="../../assets/video/sim2real_2.mp4" poster="../../assets/video/sim2real_2.jpg" autoplay loop muted playsinline></video><figcaption>2 · Once learning is reasonably stable, the weights are saved</figcaption></figure>
+<figure><video src="../../assets/video/sim2real_1.mp4" poster="../../assets/video/sim2real_1.jpg" autoplay loop muted playsinline></video><figcaption>1 · Learning starts in simulation, where erratic motions are harmless</figcaption></figure>
+<figure><video src="../../assets/video/sim2real_2.mp4" poster="../../assets/video/sim2real_2.jpg" autoplay loop muted playsinline></video><figcaption>2 · Once learning is stable, the weights are saved</figcaption></figure>
 <figure><video src="../../assets/video/sim2real_3.mp4" poster="../../assets/video/sim2real_3.jpg" autoplay loop muted playsinline></video><figcaption>3 · The same network is loaded on the real robot by changing only the ROS topic</figcaption></figure>
 <figure><video src="../../assets/video/sim2real_4.mp4" poster="../../assets/video/sim2real_4.jpg" autoplay loop muted playsinline></video><figcaption>4 · After ~80 more trials the error converges</figcaption></figure>
 </div>
 
-1. **Learning starts in simulation**, where erratic movements cannot damage anything.
-2. Once learning has stabilized, **the network weights** are saved to finish learning on the real robot. The trajectory lasts 4 seconds, so ~450 trials means saving the weights after about **30 minutes**.
-3. **Load the network on the real robot**, changing only the ROS topic thanks to NRP. The movements are safer and learning can continue.
-4. After another **~80 trials the error converges**, and network parameters offer further room to improve it.
+1. **Simulation:** ~450 trials of a 4 s trajectory, about **30 minutes**, until learning is stable.
+2. **Save the weights** and load them on the real robot, changing only the ROS topic.
+3. **Real robot:** learning continues, and the error converges after **~80 more trials**.
 
-## Design choices and lessons
+## Results
 
-<div class="cols2" markdown>
-<div class="card" markdown>
-<p class="ctitle">Design choices</p>
+- **Franka Research 3** tracking a circular trajectory with the network running on a **Jetson Xavier**, verified with Vicon.
+- **Baxter**, the most demanding dynamics of the three because of its external springs, controlled by the same network.
+- Real-time control at **500 Hz (PC), 250 Hz (Jetson Orin) and 100 Hz (Jetson Xavier)**.
 
-- **Jetson:** network size and update rate adapted for real-time embedded inference.
-- **Joint-level learning,** validated in Cartesian space with Vicon as an independent ground truth.
-- **Collaborative robots:** a general, transferable controller that learns complex dynamics.
-- **Focus on the integrated pipeline:** simulation, embedded GPU and real robots working together.
-</div>
-<div class="card" markdown>
-<p class="ctitle">What I took from it</p>
-
-- **Simulate first,** then switch a single ROS topic: hardware risk drops sharply.
-- **Torque control needs a safety layer by design,** not as an afterthought.
-- **Real-time GPU spiking inference** is a systems problem as much as a modeling one.
-</div>
+<div class="media">
+<figure><video src="../../assets/video/live_setup.mp4" poster="../../assets/video/live_setup.jpg" autoplay loop muted playsinline></video><figcaption>Monitoring screen during an experiment</figcaption></figure>
 </div>
 
 <div class="nextlink"><a href="../">← All projects</a><a href="../dual-actuation-arm/">Next: Dual-actuation arm →</a></div>
