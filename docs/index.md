@@ -22,7 +22,7 @@ My work spans C++ and Python development, ROS/ROS 2 middleware, and control for 
 
 ## Highlights
 
-- **Nature Communications** (in review, 2026): *Integrating biologically-inspired learning paradigms for kinesthetic intelligence in collaborative robots*. Co-author.
+- **Nature Communications 2026**: *Integrating biologically-inspired learning paradigms for kinesthetic intelligence in collaborative robots*. Co-author.
 - **Sensors 2021**, first author: [*Formation tracking control and obstacle avoidance of unicycle-type robots guaranteeing continuous velocities*](https://www.mdpi.com/1424-8220/21/13/4374).
 - Visiting researcher at **EPFL BioRobotics Laboratory** (2025) and **Altair Robotics Laboratory**, Verona (2020).
 
